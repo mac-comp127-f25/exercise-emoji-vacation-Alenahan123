@@ -32,6 +32,12 @@ public class EmojiVacation {
     }
 
     private static void doSlideShow(CanvasWindow canvas) {
+        int slideCounting =10;
+        int holdingTime = 3;
+        for (int i =0; i<slideCounting;i++){
+            canvas.removeAll();
+        }
+
         // TODO: [Instructions step 8] Change this to an actual slideshow
         generateVacationPhoto(canvas);
     }
@@ -47,15 +53,31 @@ public class EmojiVacation {
         //       You should randomly determine the size and number of layers
         //       (within reasonable constraints).
 
+        if (percentChance(50)){
+            double baseY = randomDouble(200,500);
+            double size = randomDouble(10,150);
+            int layers = randomInt(1,3);
+            addMountains(canvas, baseY, size, layers);
+        }
+        
+        // addMountains(canvas, 380, 140, 2);
         addGround(canvas, 400);
 
         // TODO: [Instructions step 2] Create forests 60% of the time. You should randomly
         //       determine the count for the number of trees. Pick reasonable values for
         //       other parameters.
-
-        List<GraphicsGroup> family = createFamily(2, 3);
-        positionFamily(family, 60, 550, 20);
+        if (percentChance(60)){
+            int count=randomInt(1,60);
+            addForest(canvas,400,100,count);
+        }
+        int adultCount= randomInt(0, 3);
+        int childCount= randomInt(0, 5);
+        List<GraphicsGroup> family = createFamily(adultCount, childCount);
+        positionFamily(family, 60, 500, 20);
         // TODO: [Instructions step 4] Add each emoji in the list to the canvas
+        for (GraphicsGroup person:family){
+            canvas.add(person);
+        }
     }
 
     // –––––– Emoji family –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -70,12 +92,39 @@ public class EmojiVacation {
         // Hint: You can't use List.of() to do this, because you don't know the size of the
         // resulting list before the code actually runs. What can you use?
         //
-        return List.of(
-            createRandomEmoji(adultSize),
-            createRandomEmoji(childSize));
+        List<GraphicsGroup> family= new ArrayList<>();
+        for (int i = 0; i < adultCount; i++) {
+        family.add(createRandomEmoji(adultSize));
+        }
+
+        for (int i = 0; i < childCount; i++) {
+        family.add(createRandomEmoji(childSize));
+        }
+
+        return family;
+        // return List.of(
+        //     createRandomEmoji(adultSize),
+        //     createRandomEmoji(childSize));
     }
 
     private static GraphicsGroup createRandomEmoji(double size) {
+        int choice =randomInt(1, 5);
+        if (choice==1){
+            return ProvidedEmojis.createSmileyFace(size);
+        } 
+        else if(choice ==2){
+            return ProvidedEmojis.createFrownyFace(size);}
+        else if(choice ==3){
+            return ProvidedEmojis.createWinkingFace(size); }
+        else if(choice ==4){
+            return ProvidedEmojis.createContentedFace(size); }
+        else if(choice ==5){
+            return ProvidedEmojis.createNauseousFace(size); }
+        else{
+            return ProvidedEmojis.createSmileyFace(size);}
+        }
+
+
         // TODO: [Instructions step 7] Change this so that instead of always creating a smiley face,
         //       it randomly selects one of the many available emojis.
         //
@@ -83,8 +132,8 @@ public class EmojiVacation {
         // type A, else with some other probability return emoji type B, else with a certain
         // probability ... etc ... else return a smiley by default.
         //
-        return ProvidedEmojis.createSmileyFace(size);
-    }
+
+    
 
     private static void positionFamily(
             List<GraphicsGroup> family,
@@ -92,6 +141,13 @@ public class EmojiVacation {
             double baselineY,
             double spacing
     ) {
+        double x = leftX;
+        
+        for (GraphicsGroup person : family) {
+            person.setPosition(x, baselineY - person.getHeight());
+            x = x + spacing + person.getWidth();
+        }
+
         // TODO: [Instructions step 5] Iterate over the emojis in the list,
         //       and position them all in a neat row
 
