@@ -54,10 +54,9 @@ public class EmojiVacation {
         //       (within reasonable constraints).
 
         if (percentChance(50)){
-            double baseY = randomDouble(200,500);
             double size = randomDouble(10,150);
             int layers = randomInt(1,3);
-            addMountains(canvas, baseY, size, layers);
+            addMountains(canvas, 400, size, layers);
         }
         
         // addMountains(canvas, 380, 140, 2);
